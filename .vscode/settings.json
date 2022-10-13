@@ -1,0 +1,9 @@
+{
+  "makefile.extensionOutputFolder": "./.vscode",
+  "python.linting.flake8Enabled": false,
+  "python.linting.mypyEnabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": true,
+  "terminal.integrated.fontSize": 14,
+  "python.analysis.typeCheckingMode": "off"
+}

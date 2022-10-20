@@ -19,6 +19,8 @@ torchmetrics = "^0.9.3"
 loguru = "^0.6.0"
 datasets = "^2.5.1"
 torch-optimizer = "^0.3.0"
+pytorch-lightning = "^1.7.7"
+rich = "^12.6.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
@@ -33,6 +35,9 @@ mypy = "^0.982"
 
 [tool.black]
 line-length = 88
+
+[tool.isort]
+profile = "black"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

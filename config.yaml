@@ -10,3 +10,4 @@ patience: 4
 clip_grad: 0.5
 temperature: 0.1
 log_interval: 10
+save_top_k: 3

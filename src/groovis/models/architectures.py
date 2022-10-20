@@ -63,16 +63,3 @@ class Architecture(nn.Module):
         representation = self.patch_embed(images)
         representation = self.pool(representation)
         return representation
-
-
-class Vision(nn.Module):
-    def __init__(
-        self,
-        architecture: nn.Module,
-    ) -> None:
-        super().__init__()
-
-        self.architecture = architecture
-
-    def forward(self, images: torch.Tensor) -> torch.Tensor:
-        return self.architecture(images)

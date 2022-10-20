@@ -17,6 +17,7 @@ class Cfg:
     clip_grad: float = 3.0
     temperature: float = 0.1
     log_interval: int = 50
+    save_top_k: int = 3
 
 
 def load_config(path: str) -> Cfg:

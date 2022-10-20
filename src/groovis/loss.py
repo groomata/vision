@@ -3,9 +3,10 @@ from typing import Union
 import torch
 import torch.nn.functional as F
 from einops import rearrange
+from torch import nn
 
 
-class SimCLRLoss:
+class SimCLRLoss(nn.Module):
     def __init__(
         self,
         temperature: float = 0.1,
@@ -15,9 +16,10 @@ class SimCLRLoss:
         Args:
             temperature (float): scaling parameter for softmax.
         """
+        super().__init__()
         self.temperature = temperature
 
-    def __call__(
+    def forward(
         self,
         representations_1: torch.Tensor,
         representations_2: torch.Tensor,

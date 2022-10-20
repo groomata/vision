@@ -172,3 +172,5 @@ wandb/
 .testmondata
 
 .DS_Store
+
+lightning_logs/

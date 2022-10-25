@@ -5,5 +5,6 @@
   "python.linting.pylintEnabled": false,
   "python.linting.enabled": true,
   "terminal.integrated.fontSize": 14,
-  "python.analysis.typeCheckingMode": "off"
+  "python.analysis.typeCheckingMode": "off",
+  "python.formatting.blackArgs": ["--line-length", "88"]
 }

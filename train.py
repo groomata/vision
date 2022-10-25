@@ -17,7 +17,7 @@ from pytorch_lightning.callbacks import (
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.loggers.wandb import WandbLogger
 
-from groovis.data import Imagenet, ImagenetModule
+from groovis.data import ImagenetModule, Imagenette
 from groovis.loss import SimCLRLoss
 from groovis.models import Architecture, Vision
 from groovis.models.module import VAL_LOSS
@@ -25,9 +25,9 @@ from groovis.schema import load_config
 
 config = load_config("config.yaml")
 
-RUN_NAME = "lightning-test-1"
+RUN_NAME = "gpu-test-1"
 
-datamodule = ImagenetModule(config=config, dataset=Imagenet)
+datamodule = ImagenetModule(config=config, dataset=Imagenette)
 
 logger = WandbLogger(
     project="groovis",
@@ -101,6 +101,8 @@ trainer = Trainer(
     gradient_clip_val=config.clip_grad,
     log_every_n_steps=config.log_interval,
     track_grad_norm=2,
+    accelerator="auto",
+    devices=-1,
 )
 
 trainer.fit(

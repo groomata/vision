@@ -16,9 +16,8 @@ from pytorch_lightning.callbacks import (
 )
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.loggers.wandb import WandbLogger
-from torch.utils.data import DataLoader
 
-from groovis.data import SIMCLR_AUG_RELAXED, Imagenette, Splits
+from groovis.data import Imagenet, ImagenetModule
 from groovis.loss import SimCLRLoss
 from groovis.models import Architecture, Vision
 from groovis.models.module import VAL_LOSS
@@ -28,21 +27,7 @@ config = load_config("config.yaml")
 
 RUN_NAME = "lightning-test-1"
 
-
-splits: list[Splits] = ["train", "validation"]
-
-dataloader: dict[Splits, DataLoader] = {
-    split: DataLoader(
-        dataset=Imagenette(
-            transforms=SIMCLR_AUG_RELAXED,
-            split=split,
-        ),
-        batch_size=config.batch_size,
-        drop_last=True,
-        shuffle=True,
-    )
-    for split in splits
-}
+datamodule = ImagenetModule(config=config, dataset=Imagenet)
 
 logger = WandbLogger(
     project="groovis",
@@ -120,6 +105,5 @@ trainer = Trainer(
 
 trainer.fit(
     model=vision,
-    train_dataloaders=dataloader["train"],
-    val_dataloaders=dataloader["validation"],
+    datamodule=datamodule,
 )

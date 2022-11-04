@@ -112,7 +112,7 @@ trainer = Trainer(
     log_every_n_steps=config.log_interval,
     track_grad_norm=2,
     accelerator="auto",
-    devices=-1,
+    devices="auto",
 )
 
 trainer.fit(

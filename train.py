@@ -16,6 +16,7 @@ from pytorch_lightning.callbacks import (
 )
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.loggers.wandb import WandbLogger
+from pytorch_lightning.profilers import PyTorchProfiler
 
 from groovis.data import ImagenetModule, Imagenette
 from groovis.loss import SimCLRLoss
@@ -93,9 +94,16 @@ callbacks: list[Callback] = [
     ),
 ]
 
+profiler = PyTorchProfiler(
+    dirpath="logs/",
+    filename=f"profile-{RUN_NAME}",
+    export_to_chrome=True,
+)
+
 trainer = Trainer(
     logger=logger,
     callbacks=callbacks,
+    profiler=profiler,
     max_epochs=config.epochs,
     gradient_clip_algorithm="norm",
     gradient_clip_val=config.clip_grad,

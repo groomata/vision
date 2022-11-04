@@ -1386,6 +1386,20 @@ numpy = ">=1.19.2"
 all = ["imagecodecs (>=2022.2.22)", "matplotlib (>=3.3)", "lxml"]
 
 [[package]]
+name = "timm"
+version = "0.6.11"
+description = "(Unofficial) PyTorch Image Models"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+huggingface-hub = "*"
+pyyaml = "*"
+torch = ">=1.7"
+torchvision = "*"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1625,7 +1639,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "1410c03bc865846325d0bd1e6ed6a36880b522ad6708815fd6e57999ee7bbff2"
+content-hash = "e3c3ca8a338bfa615bb8ba76d3025d6b5f7aaff047cc076b6fa07bd7ac6e2359"
 
 [metadata.files]
 absl-py = [
@@ -2933,6 +2947,10 @@ threadpoolctl = [
 tifffile = [
     {file = "tifffile-2022.8.12-py3-none-any.whl", hash = "sha256:1456f9f6943c85082ef4d73f5329038826da67f70d5d513873a06f3b1598d23e"},
     {file = "tifffile-2022.8.12.tar.gz", hash = "sha256:3e74e0fd48838477ebcf40e09b7780bd095ee5920b2238f485e2c68463a3dcb4"},
+]
+timm = [
+    {file = "timm-0.6.11-py3-none-any.whl", hash = "sha256:8a10e536ecc7caf32a7e42a612a1ae561a1e0d3f1aa836905855f8aff2efa644"},
+    {file = "timm-0.6.11.tar.gz", hash = "sha256:09568842b65abbd8c99864ab893ec0902f8ad577d0112b45e1323e72ca7b3fa5"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

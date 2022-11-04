@@ -17,10 +17,11 @@ from pytorch_lightning.callbacks import (
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
+from timm import create_model
 
 from groovis.data import ImagenetModule, Imagenette
 from groovis.loss import SimCLRLoss
-from groovis.models import Architecture, Vision
+from groovis.models import Vision
 from groovis.models.module import VAL_LOSS
 from groovis.schema import load_config
 
@@ -40,11 +41,12 @@ logger = WandbLogger(
 
 loss_fn = SimCLRLoss(temperature=config.temperature)
 
-architecture = Architecture(
-    patch_size=config.patch_size,
-    channels=config.channels,
-    embed_dim=config.embed_dim,
-)
+# architecture = Architecture(
+#     patch_size=config.patch_size,
+#     channels=config.channels,
+#     embed_dim=config.embed_dim,
+# )
+architecture = create_model("vit_small_patch16_224", num_classes=0)
 
 logger.watch(
     model=architecture,

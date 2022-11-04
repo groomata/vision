@@ -111,6 +111,7 @@ trainer = Trainer(
     gradient_clip_val=config.clip_grad,
     log_every_n_steps=config.log_interval,
     track_grad_norm=2,
+    precision=16,
     accelerator="auto",
     devices="auto",
 )

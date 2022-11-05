@@ -3,9 +3,9 @@ channels: 3
 embed_dim: 1024
 base_lr: 0.005
 warmup_lr: 0.000005
-warmup_epochs: 2
+warmup_epochs: 0
 batch_size: 32
-epochs: 10
+epochs: 1
 patience: 4
 clip_grad: 0.5
 temperature: 0.1

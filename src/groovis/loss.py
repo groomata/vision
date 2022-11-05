@@ -115,7 +115,7 @@ class SimCLRLoss(nn.Module):
         B = N // 2  # batch_size
 
         similarity.div_(self.temperature)
-        similarity.fill_diagonal_(torch.finfo(torch.float).min)
+        similarity.fill_diagonal_(torch.finfo(similarity.dtype).min)
 
         loss = F.cross_entropy(
             similarity,
@@ -138,7 +138,7 @@ class SimCLRLoss(nn.Module):
             anchor_idx: int, positive_idx: int
         ) -> torch.Tensor:
             row = similarity[anchor_idx]
-            row[anchor_idx] = torch.finfo(torch.float).min
+            row[anchor_idx] = torch.finfo(similarity.dtype).min
             probs = row.exp() / row.exp().sum()
             return -probs[positive_idx].log()
 

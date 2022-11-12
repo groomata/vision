@@ -70,7 +70,7 @@ jobs:
       # so this line is super-simple. But it could be as complex as you need.
       - run: poetry run pytest
 
-  docker:
+  build:
     runs-on: ubuntu-latest
     needs: test
     steps:

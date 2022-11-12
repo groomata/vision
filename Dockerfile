@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive \
     TZ Asia/Seoul
 
 RUN apt-get update -y && apt-get install -y \
-    python3.9 python3.9-dev python3.9-venv
+    python3.9 python3.9-dev python3.9-venv curl
 
 RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.1.14
 

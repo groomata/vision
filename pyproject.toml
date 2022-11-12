@@ -7,11 +7,11 @@ authors = ["junhsss <junhsssr@gmail.com>"]
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
 Pillow = "^9.0.1"
-torch = "^1.12.0"
+torch = "=1.12.1"
 einops = "^0.4.1"
 albumentations = "^1.2.1"
 matplotlib = "^3.5.2"
-torchvision = "^0.13.1"
+torchvision = "=0.13.1"
 wandb = "^0.13.3"
 python-dotenv = "^0.21.0"
 omegaconf = "^2.2.3"

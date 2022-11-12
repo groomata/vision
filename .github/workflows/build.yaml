@@ -4,10 +4,7 @@
 # `branches: [main], then this actions runs _twice_ on pull requests, which is
 # annoying.
 
-on:
-  push:
-    branches: [main]
-  pull_request:
+on: push
 
 jobs:
   test:

@@ -1,6 +1,7 @@
 from typing import Optional, Type
 
 from pytorch_lightning import LightningDataModule, Trainer
+from pytorch_lightning.accelerators import CPUAccelerator
 from torch.utils.data import DataLoader
 
 from groovis.data.augmentation import SIMCLR_AUG_RELAXED
@@ -32,7 +33,7 @@ class ImagenetModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             drop_last=True,
             shuffle=True,
-            num_workers=0 if self.on_cpu else self.trainer.devices * 4,
+            num_workers=0 if self.on_cpu else self.trainer.num_devices * 4,
             prefetch_factor=2,
             persistent_workers=True,
             pin_memory=not self.on_cpu,
@@ -47,7 +48,7 @@ class ImagenetModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             drop_last=True,
             shuffle=True,
-            num_workers=0 if self.on_cpu else self.trainer.devices * 4,
+            num_workers=0 if self.on_cpu else self.trainer.num_devices * 4,
             prefetch_factor=2,
             persistent_workers=True,
             pin_memory=not self.on_cpu,
@@ -55,4 +56,4 @@ class ImagenetModule(LightningDataModule):
 
     @property
     def on_cpu(self) -> bool:
-        return self.trainer.accelerator == "cpu"
+        return isinstance(self.trainer.accelerator, CPUAccelerator)

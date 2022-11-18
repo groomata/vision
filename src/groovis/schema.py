@@ -18,6 +18,8 @@ class Cfg:
     temperature: float = 0.1
     log_interval: int = 50
     save_top_k: int = 3
+    run_name: str = "default-test"
+    offline: bool = False
 
 
 def load_config(path: str) -> Cfg:

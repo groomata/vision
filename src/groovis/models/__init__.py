@@ -1,2 +1,2 @@
-from .architectures import Architecture
+from .architecture import Architecture
 from .module import Vision

@@ -1,3 +1,0 @@
-_target_: timm.create_model
-model_name: vit_small_patch16_224
-num_classes: 0

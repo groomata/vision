@@ -13,12 +13,11 @@ from timm import create_model
 
 from groovis.data import ImagenetModule, Imagenette
 from groovis.loss import SimCLRLoss
-from groovis.models import Vision
-from groovis.models.module import VAL_LOSS
-from groovis.schema import Cfg
+from groovis.models.module import VAL_LOSS, Vision
+from groovis.schema import Config
 
 
-def train(config: Cfg):
+def train(config: Config):
     RUN_NAME = config.run_name
 
     datamodule = ImagenetModule(config=config, dataset=Imagenette)

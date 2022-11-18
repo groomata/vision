@@ -1,4 +1,0 @@
-_target_: groovis.models.architecture.Architecture
-patch_size: 16
-channels: 3
-embed_dim: 1024

@@ -6,11 +6,9 @@ warnings.filterwarnings("ignore")
 load_dotenv()
 
 import hydra
-
-# from hydra.utils import instantiate
 from rich import print
 
-from groovis.schema import Config, register_configs
+from groovis.configs import Config, register_configs
 
 # from groovis.train import train
 
@@ -20,12 +18,6 @@ from groovis.schema import Config, register_configs
     version_base="1.2",
 )
 def main(config: Config):
-
-    config.architecture
-
-    # architecture = instantiate(config.architecture)
-
-    # print(architecture)
 
     print(config)
     # train(config=config)

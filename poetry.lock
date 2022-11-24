@@ -221,13 +221,13 @@ xxhash = "*"
 apache-beam = ["apache-beam (>=2.26.0)"]
 audio = ["librosa"]
 benchmarks = ["numpy (==1.18.5)", "tensorflow (==2.3.0)", "torch (==1.7.1)", "transformers (==3.0.2)"]
-dev = ["absl-py", "pytest", "pytest-datadir", "pytest-xdist", "apache-beam (>=2.26.0)", "elasticsearch (<8.0.0)", "aiobotocore (>=2.0.1)", "boto3 (>=1.19.8)", "botocore (>=1.22.8)", "faiss-cpu (>=1.6.4)", "fsspec", "lz4", "moto[server,s3] (==2.0.4)", "rarfile (>=4.0)", "s3fs (>=2021.11.1)", "tensorflow (>=2.3,!=2.6.0,!=2.6.1)", "torch", "torchaudio (<0.12.0)", "soundfile", "transformers", "bs4", "conllu", "h5py", "lxml", "mwparserfromhell", "openpyxl", "py7zr", "zstandard", "sentencepiece", "rouge-score", "sacremoses", "bert-score (>=0.3.6)", "jiwer", "langdetect", "mauve-text", "nltk", "sacrebleu", "scikit-learn", "scipy", "seqeval", "tldextract", "toml (>=0.10.1)", "requests-file (>=1.5.1)", "tldextract (>=3.1.0)", "texttable (>=1.6.3)", "Werkzeug (>=1.0.1)", "six (>=1.15.0,<1.16.0)", "Pillow (>=6.2.1)", "librosa", "black (>=22.0,<23.0)", "flake8 (>=3.8.3)", "isort (>=5.0.0)", "pyyaml (>=5.3.1)"]
+dev = ["absl-py", "pytest", "pytest-datadir", "pytest-xdist", "apache-beam (>=2.26.0)", "elasticsearch (<8.0.0)", "aiobotocore (>=2.0.1)", "boto3 (>=1.19.8)", "botocore (>=1.22.8)", "faiss-cpu (>=1.6.4)", "fsspec", "lz4", "moto[s3,server] (==2.0.4)", "rarfile (>=4.0)", "s3fs (>=2021.11.1)", "tensorflow (>=2.3,!=2.6.0,!=2.6.1)", "torch", "torchaudio (<0.12.0)", "soundfile", "transformers", "bs4", "conllu", "h5py", "lxml", "mwparserfromhell", "openpyxl", "py7zr", "zstandard", "sentencepiece", "rouge-score", "sacremoses", "bert-score (>=0.3.6)", "jiwer", "langdetect", "mauve-text", "nltk", "sacrebleu", "scikit-learn", "scipy", "seqeval", "tldextract", "toml (>=0.10.1)", "requests-file (>=1.5.1)", "tldextract (>=3.1.0)", "texttable (>=1.6.3)", "Werkzeug (>=1.0.1)", "six (>=1.15.0,<1.16.0)", "Pillow (>=6.2.1)", "librosa", "black (>=22.0,<23.0)", "flake8 (>=3.8.3)", "isort (>=5.0.0)", "pyyaml (>=5.3.1)"]
 docs = ["s3fs"]
 quality = ["black (>=22.0,<23.0)", "flake8 (>=3.8.3)", "isort (>=5.0.0)", "pyyaml (>=5.3.1)"]
 s3 = ["fsspec", "boto3", "botocore", "s3fs"]
 tensorflow = ["tensorflow (>=2.2.0,!=2.6.0,!=2.6.1)"]
 tensorflow_gpu = ["tensorflow-gpu (>=2.2.0,!=2.6.0,!=2.6.1)"]
-tests = ["absl-py", "pytest", "pytest-datadir", "pytest-xdist", "apache-beam (>=2.26.0)", "elasticsearch (<8.0.0)", "aiobotocore (>=2.0.1)", "boto3 (>=1.19.8)", "botocore (>=1.22.8)", "faiss-cpu (>=1.6.4)", "fsspec", "lz4", "moto[server,s3] (==2.0.4)", "rarfile (>=4.0)", "s3fs (>=2021.11.1)", "tensorflow (>=2.3,!=2.6.0,!=2.6.1)", "torch", "torchaudio (<0.12.0)", "soundfile", "transformers", "bs4", "conllu", "h5py", "lxml", "mwparserfromhell", "openpyxl", "py7zr", "zstandard", "sentencepiece", "rouge-score", "sacremoses", "bert-score (>=0.3.6)", "jiwer", "langdetect", "mauve-text", "nltk", "sacrebleu", "scikit-learn", "scipy", "seqeval", "tldextract", "toml (>=0.10.1)", "requests-file (>=1.5.1)", "tldextract (>=3.1.0)", "texttable (>=1.6.3)", "Werkzeug (>=1.0.1)", "six (>=1.15.0,<1.16.0)", "Pillow (>=6.2.1)", "librosa"]
+tests = ["absl-py", "pytest", "pytest-datadir", "pytest-xdist", "apache-beam (>=2.26.0)", "elasticsearch (<8.0.0)", "aiobotocore (>=2.0.1)", "boto3 (>=1.19.8)", "botocore (>=1.22.8)", "faiss-cpu (>=1.6.4)", "fsspec", "lz4", "moto[s3,server] (==2.0.4)", "rarfile (>=4.0)", "s3fs (>=2021.11.1)", "tensorflow (>=2.3,!=2.6.0,!=2.6.1)", "torch", "torchaudio (<0.12.0)", "soundfile", "transformers", "bs4", "conllu", "h5py", "lxml", "mwparserfromhell", "openpyxl", "py7zr", "zstandard", "sentencepiece", "rouge-score", "sacremoses", "bert-score (>=0.3.6)", "jiwer", "langdetect", "mauve-text", "nltk", "sacrebleu", "scikit-learn", "scipy", "seqeval", "tldextract", "toml (>=0.10.1)", "requests-file (>=1.5.1)", "tldextract (>=3.1.0)", "texttable (>=1.6.3)", "Werkzeug (>=1.0.1)", "six (>=1.15.0,<1.16.0)", "Pillow (>=6.2.1)", "librosa"]
 torch = ["torch"]
 vision = ["Pillow (>=6.2.1)"]
 
@@ -475,6 +475,22 @@ python-versions = "*"
 antlr4-python3-runtime = ">=4.9.0,<4.10.0"
 omegaconf = ">=2.2,<3.0"
 packaging = "*"
+
+[[package]]
+name = "hydra-zen"
+version = "0.8.0"
+description = "Configurable, reproducible, and scalable workflows in Python, via Hydra"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+hydra-core = ">=1.1.0"
+typing-extensions = ">=4.1.0"
+
+[package.extras]
+beartype = ["beartype (>=0.8.0)"]
+pydantic = ["pydantic (>=1.8.2)"]
 
 [[package]]
 name = "identify"
@@ -1652,7 +1668,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "e1100523c0d285befd6e9bd40b5f1292ec28ec79715968710158d8a1479676b7"
+content-hash = "57ae465f65b24ae823a40a8ab27b45d3912b380fc1a529641686a3cf3eb3dc8a"
 
 [metadata.files]
 absl-py = [
@@ -2046,6 +2062,10 @@ huggingface-hub = [
 hydra-core = [
     {file = "hydra-core-1.2.0.tar.gz", hash = "sha256:4990721ce4ac69abafaffee566d6b63a54faa6501ecce65b338d3251446ff634"},
     {file = "hydra_core-1.2.0-py3-none-any.whl", hash = "sha256:b6614fd6d6a97a9499f7ddbef02c9dd38f2fec6a9bc83c10e248db1dae50a528"},
+]
+hydra-zen = [
+    {file = "hydra_zen-0.8.0-py3-none-any.whl", hash = "sha256:4448c1b401ab703c1d9f2cba2961c4b8262e9eb4363476da40c314fc471f99c1"},
+    {file = "hydra_zen-0.8.0.tar.gz", hash = "sha256:0133f5d1fcb813636424ab3b285cd34186138c2825bfe5eaefcf7aed4ebcbc48"},
 ]
 identify = [
     {file = "identify-2.5.6-py2.py3-none-any.whl", hash = "sha256:b276db7ec52d7e89f5bc4653380e33054ddc803d25875952ad90b0f012cbcdaa"},

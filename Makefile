@@ -7,4 +7,4 @@ install:
 	poetry install --no-dev --no-interaction
 
 train:
-	poetry run python train.py
+	poetry run python run.py

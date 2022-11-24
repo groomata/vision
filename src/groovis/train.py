@@ -1,3 +1,4 @@
+from hydra_zen import instantiate
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import (
     Callback,
@@ -9,7 +10,7 @@ from pytorch_lightning.callbacks import (
 )
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.loggers.wandb import WandbLogger
-from timm import create_model
+from torch import nn
 
 from groovis.data import ImagenetModule, Imagenette
 from groovis.loss import SimCLRLoss
@@ -32,15 +33,7 @@ def train(config: Config):
 
     loss_fn = SimCLRLoss(temperature=config.temperature)
 
-    # architecture = Architecture(
-    #     patch_size=config.patch_size,
-    #     channels=config.channels,
-    #     embed_dim=config.embed_dim,
-    # )
-    architecture = create_model(
-        model_name="vit_small_patch16_224",
-        num_classes=0,
-    )
+    architecture: nn.Module = instantiate(config.architecture)
 
     logger.watch(
         model=architecture,

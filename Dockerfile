@@ -19,4 +19,4 @@ RUN poetry install --no-dev --no-interaction && \
     torch==1.12.1+cu116 torchvision==0.13.1+cu116 \
     -f https://download.pytorch.org/whl/torch_stable.html
 
-ENTRYPOINT ["poetry", "run", "python", "train.py"]
+ENTRYPOINT ["poetry", "run", "python", "run.py"]

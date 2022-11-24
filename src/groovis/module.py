@@ -1,30 +1,29 @@
 import torch
-import torch_optimizer as optim
+from hydra_zen.typing import Partial
 from pytorch_lightning import LightningModule
 from torch import nn
+from torch.optim import Optimizer
+from torch.optim.lr_scheduler import _LRScheduler
 from torchmetrics import MeanMetric
-
-from groovis.schema import Config
 
 TRAIN_LOSS = "train/loss"
 VAL_LOSS = "val/loss"
 
 
 class Vision(LightningModule):
-    hparams: Config
-
     def __init__(
         self,
         architecture: nn.Module,
         loss_fn: nn.Module,
-        config: Config,
+        optimizer: Partial[Optimizer],
+        scheduler: Partial[_LRScheduler],
     ) -> None:
         super().__init__()
 
-        self.save_hyperparameters(config)
-
         self.architecture = architecture
         self.loss_fn = loss_fn
+        self.optimizer = optimizer
+        self.scheduler = scheduler
 
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
@@ -72,19 +71,25 @@ class Vision(LightningModule):
 
     def configure_optimizers(self):
 
-        optimizer = optim.LARS(
-            params=self.parameters(),
-            lr=self.hparams.base_lr,
-        )
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        optimizer = self.optimizer(params=self.parameters())
+        scheduler = self.scheduler(
             optimizer=optimizer,
-            max_lr=self.hparams.base_lr,
             total_steps=self.trainer.estimated_stepping_batches,
-            pct_start=self.hparams.warmup_epochs / self.hparams.epochs,
-            anneal_strategy="linear",
-            div_factor=self.hparams.base_lr / self.hparams.warmup_lr,
-            final_div_factor=1e6,
         )
+
+        # optimizer = optim.LARS(
+        #     params=self.parameters(),
+        #     lr=self.hparams.base_lr,
+        # )
+        # scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        #     optimizer=optimizer,
+        #     max_lr=self.hparams.base_lr,
+        #     total_steps=self.trainer.estimated_stepping_batches,
+        #     pct_start=self.hparams.warmup_epochs / self.hparams.epochs,
+        #     anneal_strategy="linear",
+        #     div_factor=self.hparams.base_lr / self.hparams.warmup_lr,
+        #     final_div_factor=1e6,
+        # )
 
         return {
             "optimizer": optimizer,

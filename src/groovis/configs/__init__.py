@@ -1,16 +1,34 @@
+import pkgutil
 from dataclasses import dataclass, field
 from typing import Any
 
 from hydra.core.config_store import ConfigStore
-from hydra_zen import make_custom_builds_fn
+from hydra_zen import make_custom_builds_fn, to_yaml
 from omegaconf import MISSING
+from rich import print
 
+
+def print_yaml(config: Any):
+    print(to_yaml(config))
+
+
+partial_builds = make_custom_builds_fn(populate_full_signature=True, zen_partial=True)
 full_builds = make_custom_builds_fn(populate_full_signature=True)
 
 
 defaults = [
     "_self_",
     {"architecture": "base"},
+    {"loss": "nt_xent_medium"},
+    {"datamodule": "imagenet"},
+    {"datamodule/dataset": "imagenette"},
+    {"datamodule/dataset/transforms": "relaxed"},
+    {"datamodule/dataloader": "base"},
+    {"trainer": "auto"},
+    {"trainer/logger": "wandb"},
+    {"trainer/callbacks": "default"},
+    {"optimizer": "adam"},
+    {"scheduler": "onecycle"},
 ]
 
 
@@ -18,25 +36,21 @@ defaults = [
 class Config:
     defaults: list[Any] = field(default_factory=lambda: defaults)
     architecture: Any = MISSING
-    base_lr: float = 0.005
-    warmup_lr: float = 0.000005
-    warmup_epochs: int = 0
-    batch_size: int = 32
-    epochs: int = 1
-    patience: int = 4
-    clip_grad: float = 0.5
-    temperature: float = 0.1
-    log_interval: int = 10
-    save_top_k: int = 3
-    run_name: str = "default-test"
-    offline: bool = True
+    loss: Any = MISSING
+    datamodule: Any = MISSING
+    trainer: Any = MISSING
+    optimizer: Any = MISSING
+    scheduler: Any = MISSING
 
 
 def register_configs():
-    from .architecture import _register_configs as register_architecture_configs
-
     cs = ConfigStore.instance()
 
     cs.store(name="default", node=Config)
 
-    register_architecture_configs()
+    for module_info in pkgutil.walk_packages(__path__):
+        name = module_info.name
+        module_finder = module_info.module_finder
+
+        module = module_finder.find_module(name).load_module(name)
+        module._register_configs()

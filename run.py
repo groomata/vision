@@ -6,11 +6,9 @@ warnings.filterwarnings("ignore")
 load_dotenv()
 
 import hydra
-from rich import print
 
 from groovis.configs import Config, register_configs
-
-# from groovis.train import train
+from groovis.train import train
 
 
 @hydra.main(
@@ -18,9 +16,7 @@ from groovis.configs import Config, register_configs
     version_base="1.2",
 )
 def main(config: Config):
-
-    print(config)
-    # train(config=config)
+    train(config=config)
 
 
 if __name__ == "__main__":

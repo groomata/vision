@@ -1,5 +1,6 @@
 from hydra_zen import instantiate
 from hydra_zen.typing import Partial
+from omegaconf import OmegaConf
 from pytorch_lightning import LightningDataModule, Trainer
 from pytorch_lightning.loggers.wandb import WandbLogger
 from torch import nn
@@ -34,6 +35,8 @@ def train(config: Config):
     trainer: Trainer = exp.trainer
 
     logger: WandbLogger = trainer.logger
+
+    logger.experiment.config.update(OmegaConf.to_container(config))
 
     logger.watch(
         model=architecture,

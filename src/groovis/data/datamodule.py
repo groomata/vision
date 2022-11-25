@@ -30,10 +30,16 @@ class ImagenetModule(LightningDataModule):
             dataset=self.dataset(
                 split="train",
             ),
-            num_workers=None if self.on_cpu else self.trainer.num_devices * 4,
-            prefetch_factor=None if self.on_cpu else 2,
-            persistent_workers=None if self.on_cpu else True,
-            pin_memory=None if self.on_cpu else True,
+            **(
+                {
+                    "num_workers": self.trainer.num_devices * 4,
+                    "prefetch_factor": 2,
+                    "persistent_workers": True,
+                    "pin_memory": True,
+                }
+                if not self.on_cpu
+                else {}
+            )
         )
 
     def val_dataloader(self) -> DataLoader:
@@ -41,10 +47,16 @@ class ImagenetModule(LightningDataModule):
             dataset=self.dataset(
                 split="validation",
             ),
-            num_workers=None if self.on_cpu else self.trainer.num_devices * 4,
-            prefetch_factor=None if self.on_cpu else 2,
-            persistent_workers=None if self.on_cpu else True,
-            pin_memory=None if self.on_cpu else True,
+            **(
+                {
+                    "num_workers": self.trainer.num_devices * 4,
+                    "prefetch_factor": 2,
+                    "persistent_workers": True,
+                    "pin_memory": True,
+                }
+                if not self.on_cpu
+                else {}
+            )
         )
 
     @property

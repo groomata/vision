@@ -18,7 +18,7 @@ full_builds = make_custom_builds_fn(populate_full_signature=True)
 
 defaults = [
     "_self_",
-    {"architecture": "base"},
+    {"architecture": "simple_base"},
     {"loss": "nt_xent_medium"},
     {"datamodule": "imagenet"},
     {"datamodule/dataset": "imagenette"},

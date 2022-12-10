@@ -1,20 +1,11 @@
-from enum import IntEnum
-
 from hydra.core.config_store import ConfigStore
 
 from groovis.configs import full_builds
-from groovis.models import Architecture
-from groovis.models.components.patch_embed import PatchEmbed
+from groovis.models.mixer import Mixer
 
+from . import ArchitectureConfig, EmbedDim, PatchEmbedConfig
 
-class EmbedDim(IntEnum):
-    SMALL = 384
-    BASE = 768
-    LARGE = 1024
-
-
-ArchitectureConfig = full_builds(Architecture)
-PatchEmbedConfig = full_builds(PatchEmbed)
+MixerConfig = full_builds(Mixer)
 
 
 def _register_configs():
@@ -22,31 +13,37 @@ def _register_configs():
 
     cs.store(
         group="architecture",
-        name="simple_small",
+        name="mixer_small",
         node=ArchitectureConfig(
             patch_embed=PatchEmbedConfig(
                 embed_dim=EmbedDim.SMALL.value,
             ),
-            backbone=None,
+            backbone=MixerConfig(
+                embed_dim=EmbedDim.SMALL.value,
+            ),
         ),
     )
     cs.store(
         group="architecture",
-        name="simple_base",
+        name="mixer_base",
         node=ArchitectureConfig(
             patch_embed=PatchEmbedConfig(
                 embed_dim=EmbedDim.BASE.value,
             ),
-            backbone=None,
+            backbone=MixerConfig(
+                embed_dim=EmbedDim.BASE.value,
+            ),
         ),
     )
     cs.store(
         group="architecture",
-        name="simple_large",
+        name="mixer_large",
         node=ArchitectureConfig(
             patch_embed=PatchEmbedConfig(
                 embed_dim=EmbedDim.LARGE.value,
             ),
-            backbone=None,
+            backbone=MixerConfig(
+                embed_dim=EmbedDim.LARGE.value,
+            ),
         ),
     )

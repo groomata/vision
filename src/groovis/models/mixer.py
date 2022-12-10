@@ -1,16 +1,17 @@
-import torch
 from einops.layers.torch import EinMix
 from torch import nn
+
+from groovis.types import SequenceTensor, SequenceToSequence, StrictInt, torchtyped
 
 
 class Mixer(nn.Module):
     def __init__(
         self,
-        embed_dim: int = 1024,
+        embed_dim: StrictInt = 1024,
     ) -> None:
         super().__init__()
 
-        self.projection = EinMix(
+        self.projection: SequenceToSequence = EinMix(
             "b n d_in -> b n d_out",
             weight_shape="d_in d_out",
             bias_shape="d_out",
@@ -18,5 +19,6 @@ class Mixer(nn.Module):
             d_out=embed_dim,
         )
 
-    def forward(self, representation: torch.Tensor) -> torch.Tensor:
+    @torchtyped
+    def forward(self, representation: SequenceTensor) -> SequenceTensor:
         return representation + self.projection(representation)

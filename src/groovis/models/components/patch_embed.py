@@ -1,18 +1,25 @@
-import torch
 from einops.layers.torch import EinMix
 from torch import nn
+
+from groovis.types import (
+    ImageTensor,
+    ImageToSequence,
+    SequenceTensor,
+    StrictInt,
+    torchtyped,
+)
 
 
 class PatchEmbed(nn.Module):
     def __init__(
         self,
-        patch_size: int = 16,
-        channels: int = 3,
-        embed_dim: int = 1024,
+        patch_size: StrictInt = 16,
+        channels: StrictInt = 3,
+        embed_dim: StrictInt = 1024,
     ) -> None:
         super().__init__()
 
-        self.patch_embed = EinMix(
+        self.patch_embed: ImageToSequence = EinMix(
             "b c (h ph) (w pw) -> b (h w) d",
             weight_shape="c ph pw d",
             bias_shape="d",
@@ -22,5 +29,6 @@ class PatchEmbed(nn.Module):
             d=embed_dim,
         )
 
-    def forward(self, images: torch.Tensor) -> torch.Tensor:
+    @torchtyped
+    def forward(self, images: ImageTensor) -> SequenceTensor:
         return self.patch_embed(images)

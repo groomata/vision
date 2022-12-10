@@ -34,15 +34,14 @@ def train(config: Config):
 
     trainer: Trainer = exp.trainer
 
-    logger: WandbLogger = trainer.logger
+    if isinstance(trainer.logger, WandbLogger):
+        trainer.logger.experiment.config.update(OmegaConf.to_container(config))
 
-    logger.experiment.config.update(OmegaConf.to_container(config))
-
-    logger.watch(
-        model=architecture,
-        log="all",
-        log_freq=config.trainer.log_every_n_steps,
-    )
+        trainer.logger.watch(
+            model=architecture,
+            log="all",
+            log_freq=config.trainer.log_every_n_steps,
+        )
 
     trainer.fit(
         model=model,

@@ -7,6 +7,12 @@ from groovis.models import Architecture
 from groovis.models.components.patch_embed import PatchEmbed
 
 
+class Depth(IntEnum):
+    SMALL = 8
+    BASE = 12
+    LARGE = 24
+
+
 class EmbedDim(IntEnum):
     SMALL = 384
     BASE = 768

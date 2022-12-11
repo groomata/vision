@@ -1,10 +1,11 @@
 from hydra.core.config_store import ConfigStore
 
-from groovis.configs import full_builds
-from groovis.models.mixer import Mixer
+from groovis.configs import full_builds, partial_builds
+from groovis.models.mixer import Mixer, MixerBlock
 
-from . import ArchitectureConfig, EmbedDim, PatchEmbedConfig
+from . import ArchitectureConfig, Depth, EmbedDim, PatchEmbedConfig
 
+MixerBlockConfig = partial_builds(MixerBlock)
 MixerConfig = full_builds(Mixer)
 
 
@@ -19,7 +20,10 @@ def _register_configs():
                 embed_dim=EmbedDim.SMALL.value,
             ),
             backbone=MixerConfig(
-                embed_dim=EmbedDim.SMALL.value,
+                block=MixerBlockConfig(
+                    embed_dim=EmbedDim.SMALL.value,
+                ),
+                depth=Depth.SMALL.value,
             ),
         ),
     )
@@ -31,7 +35,10 @@ def _register_configs():
                 embed_dim=EmbedDim.BASE.value,
             ),
             backbone=MixerConfig(
-                embed_dim=EmbedDim.BASE.value,
+                block=MixerBlockConfig(
+                    embed_dim=EmbedDim.BASE.value,
+                ),
+                depth=Depth.BASE.value,
             ),
         ),
     )
@@ -43,7 +50,10 @@ def _register_configs():
                 embed_dim=EmbedDim.LARGE.value,
             ),
             backbone=MixerConfig(
-                embed_dim=EmbedDim.LARGE.value,
+                block=MixerBlockConfig(
+                    embed_dim=EmbedDim.LARGE.value,
+                ),
+                depth=Depth.LARGE.value,
             ),
         ),
     )

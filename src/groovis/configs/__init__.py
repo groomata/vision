@@ -30,7 +30,7 @@ defaults = [
     {"loss": "nt_xent_medium"},
     {"datamodule": "imagenet"},
     {"datamodule/dataset": "imagenette"},
-    {"datamodule/dataset/transforms": "relaxed"},
+    {"datamodule/dataset/transforms": "default"},
     {"datamodule/dataloader": "base"},
     {"trainer": "auto"},
     {"trainer/callbacks": "default"},

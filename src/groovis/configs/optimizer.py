@@ -4,13 +4,13 @@ from torch import optim
 
 from groovis.configs import partial_builds
 
-SGDConfig = partial_builds(optim.SGD, lr=0.005)
-RMSPropConfig = partial_builds(optim.RMSprop, lr=0.005)
-AdamConfig = partial_builds(optim.Adam, lr=0.005)
-AdamWConfig = partial_builds(optim.AdamW, lr=0.005)
-RAdamConfig = partial_builds(optim.RAdam, lr=0.005)
+SGDConfig = partial_builds(optim.SGD, lr=0.0001)
+RMSPropConfig = partial_builds(optim.RMSprop, lr=0.0001)
+AdamConfig = partial_builds(optim.Adam, lr=0.0001)
+AdamWConfig = partial_builds(optim.AdamW, lr=0.0001)
+RAdamConfig = partial_builds(optim.RAdam, lr=0.0001)
 
-LARSConfig = partial_builds(torch_optimizer.LARS, lr=0.005)
+LARSConfig = partial_builds(torch_optimizer.LARS, lr=0.0001)
 
 
 def _register_configs():

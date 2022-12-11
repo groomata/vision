@@ -9,20 +9,24 @@ class MixerBlock(nn.Module):
     def __init__(
         self,
         embed_dim: StrictInt = 1024,
+        act_layer: Partial[nn.Module] = nn.GELU,
     ) -> None:
         super().__init__()
 
-        self.projection: SequenceToSequence = EinMix(
-            "b n d_in -> b n d_out",
-            weight_shape="d_in d_out",
-            bias_shape="d_out",
-            d_in=embed_dim,
-            d_out=embed_dim,
+        self.block: SequenceToSequence = nn.Sequential(
+            EinMix(
+                "b n d_in -> b n d_out",
+                weight_shape="d_in d_out",
+                bias_shape="d_out",
+                d_in=embed_dim,
+                d_out=embed_dim,
+            ),
+            act_layer(),
         )
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:
-        return representation + self.projection(representation)
+        return representation + self.block(representation)
 
 
 class Mixer(nn.Module):

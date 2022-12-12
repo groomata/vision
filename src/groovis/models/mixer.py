@@ -2,6 +2,7 @@ from einops.layers.torch import EinMix
 from hydra_zen.typing import Partial
 from torch import nn
 
+from groovis.models.components.layer_norm import NormType
 from groovis.types import SequenceTensor, SequenceToSequence, StrictInt, torchtyped
 
 
@@ -26,18 +27,19 @@ class MixerBlock(nn.Module):
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:
-        return representation + self.block(representation)
+        return self.block(representation)
 
 
 class Mixer(nn.Module):
     def __init__(
         self,
         block: Partial[nn.Module],
+        norm: Partial[NormType],
         depth: StrictInt = 24,
     ) -> None:
         super().__init__()
 
-        self.blocks = nn.ModuleList([block() for _ in range(depth)])
+        self.blocks = nn.ModuleList([norm(block=block()) for _ in range(depth)])
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:

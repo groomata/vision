@@ -5,6 +5,7 @@ from groovis.models.mixer import Mixer, MixerBlock
 
 from . import ArchitectureConfig, Depth, EmbedDim, PatchEmbedConfig
 from .components.act_layer import GELUConfig
+from .components.layer_norm import PreNormConfig
 
 MixerBlockConfig = partial_builds(MixerBlock)
 MixerConfig = full_builds(Mixer)
@@ -25,6 +26,9 @@ def _register_configs():
                     embed_dim=EmbedDim.SMALL.value,
                     act_layer=GELUConfig,
                 ),
+                norm=PreNormConfig(
+                    embed_dim=EmbedDim.SMALL.value,
+                ),
                 depth=Depth.SMALL.value,
             ),
         ),
@@ -41,6 +45,9 @@ def _register_configs():
                     embed_dim=EmbedDim.BASE.value,
                     act_layer=GELUConfig,
                 ),
+                norm=PreNormConfig(
+                    embed_dim=EmbedDim.BASE.value,
+                ),
                 depth=Depth.BASE.value,
             ),
         ),
@@ -56,6 +63,9 @@ def _register_configs():
                 block=MixerBlockConfig(
                     embed_dim=EmbedDim.LARGE.value,
                     act_layer=GELUConfig,
+                ),
+                norm=PreNormConfig(
+                    embed_dim=EmbedDim.LARGE.value,
                 ),
                 depth=Depth.LARGE.value,
             ),

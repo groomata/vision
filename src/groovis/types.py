@@ -18,6 +18,7 @@ def torchtyped(fn):
     return jaxtyped(beartype(fn))
 
 
+AnyTensor: TypeAlias = Float[torch.Tensor, "*shape"]
 ImageTensor: TypeAlias = Float[torch.Tensor, "batch channel height width"]
 SequenceTensor: TypeAlias = Float[torch.Tensor, "batch sequence feature"]
 PooledTensor: TypeAlias = Float[torch.Tensor, "batch feature"]

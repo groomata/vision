@@ -12,6 +12,7 @@ from beartype.vale import Is
 from jaxtyping import Float, jaxtyped
 
 StrictInt = Annotated[int, Is[lambda x: x > 0]]
+StrictFloat = Annotated[float, Is[lambda x: x > 0]]
 
 
 def torchtyped(fn):

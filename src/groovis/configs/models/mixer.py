@@ -7,7 +7,10 @@ from . import ArchitectureConfig, Depth, EmbedDim, PatchEmbedConfig
 from .components.act_layer import GELUConfig
 from .components.layer_norm import PreNormConfig
 
-MixerBlockConfig = partial_builds(MixerBlock)
+MixerBlockConfig = partial_builds(
+    MixerBlock,
+    expansion_factor=4,
+)
 MixerConfig = full_builds(Mixer)
 
 

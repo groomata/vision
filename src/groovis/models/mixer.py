@@ -3,13 +3,20 @@ from hydra_zen.typing import Partial
 from torch import nn
 
 from groovis.models.components.layer_norm import NormType
-from groovis.types import SequenceTensor, SequenceToSequence, StrictInt, torchtyped
+from groovis.types import (
+    SequenceTensor,
+    SequenceToSequence,
+    StrictFloat,
+    StrictInt,
+    torchtyped,
+)
 
 
 class MixerBlock(nn.Module):
     def __init__(
         self,
         embed_dim: StrictInt = 1024,
+        expansion_factor: StrictFloat = 4,
         act_layer: Partial[nn.Module] = nn.GELU,
     ) -> None:
         super().__init__()
@@ -20,9 +27,16 @@ class MixerBlock(nn.Module):
                 weight_shape="d_in d_out",
                 bias_shape="d_out",
                 d_in=embed_dim,
-                d_out=embed_dim,
+                d_out=int(expansion_factor * embed_dim),
             ),
             act_layer(),
+            EinMix(
+                "b n d_out -> b n d_in",
+                weight_shape="d_out d_in",
+                bias_shape="d_in",
+                d_in=embed_dim,
+                d_out=int(expansion_factor * embed_dim),
+            ),
         )
 
     @torchtyped

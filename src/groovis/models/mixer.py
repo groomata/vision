@@ -12,7 +12,11 @@ from groovis.types import (
 )
 
 
-class MixerBlock(nn.Module):
+class PerTokenMixerBlock(nn.Module):
+    """
+    Block for per-location mixing operations
+    """
+
     def __init__(
         self,
         embed_dim: StrictInt = 1024,
@@ -44,16 +48,56 @@ class MixerBlock(nn.Module):
         return self.block(representation)
 
 
+class CrossTokenMixerBlock(nn.Module):
+    """
+    Block for cross-location mixing operations
+    """
+
+    def __init__(
+        self,
+        seq_length: StrictInt = 196,
+        expansion_factor: StrictFloat = 0.5,
+        act_layer: Partial[nn.Module] = nn.GELU,
+    ) -> None:
+        super().__init__()
+
+        self.block: SequenceToSequence = nn.Sequential(
+            EinMix(
+                "b n_in d -> b n_out d",
+                weight_shape="n_in n_out",
+                bias_shape="n_out",
+                n_in=seq_length,
+                n_out=int(expansion_factor * seq_length),
+            ),
+            act_layer(),
+            EinMix(
+                "b n_out d -> b n_in d",
+                weight_shape="n_out n_in",
+                bias_shape="n_in",
+                n_in=seq_length,
+                n_out=int(expansion_factor * seq_length),
+            ),
+        )
+
+    @torchtyped
+    def forward(self, representation: SequenceTensor) -> SequenceTensor:
+        return self.block(representation)
+
+
 class Mixer(nn.Module):
     def __init__(
         self,
-        block: Partial[nn.Module],
+        per_location_block: Partial[nn.Module],
+        cross_location_block: Partial[nn.Module],
         norm: Partial[NormType],
         depth: StrictInt = 24,
     ) -> None:
         super().__init__()
 
-        self.blocks = nn.ModuleList([norm(block=block()) for _ in range(depth)])
+        self.blocks = nn.ModuleList([])
+        for _ in range(depth):
+            self.blocks.append(norm(block=per_location_block()))
+            self.blocks.append(norm(block=cross_location_block()))
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:

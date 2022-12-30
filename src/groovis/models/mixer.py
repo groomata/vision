@@ -87,8 +87,8 @@ class CrossTokenMixerBlock(nn.Module):
 class Mixer(nn.Module):
     def __init__(
         self,
-        per_location_block: Partial[nn.Module],
         cross_location_block: Partial[nn.Module],
+        per_location_block: Partial[nn.Module],
         norm: Partial[NormType],
         depth: StrictInt = 24,
     ) -> None:
@@ -96,8 +96,8 @@ class Mixer(nn.Module):
 
         self.blocks = nn.ModuleList([])
         for _ in range(depth):
-            self.blocks.append(norm(block=per_location_block()))
             self.blocks.append(norm(block=cross_location_block()))
+            self.blocks.append(norm(block=per_location_block()))
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:

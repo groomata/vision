@@ -7,14 +7,14 @@ from . import ArchitectureConfig, Depth, EmbedDim, PatchEmbedConfig
 from .components.act_layer import GELUConfig
 from .components.layer_norm import PreNormConfig
 
-PerTokenMixerBlockConfig = partial_builds(
-    PerTokenMixerBlock,
-    expansion_factor=4,
-    act_layer=GELUConfig,
-)
 CrossTokenMixerBlockConfig = partial_builds(
     CrossTokenMixerBlock,
     expansion_factor=0.5,
+    act_layer=GELUConfig,
+)
+PerTokenMixerBlockConfig = partial_builds(
+    PerTokenMixerBlock,
+    expansion_factor=4,
     act_layer=GELUConfig,
 )
 MixerConfig = full_builds(Mixer)
@@ -31,11 +31,11 @@ def _register_configs():
                 embed_dim=EmbedDim.SMALL.value,
             ),
             backbone=MixerConfig(
-                per_location_block=PerTokenMixerBlockConfig(
-                    embed_dim=EmbedDim.SMALL.value,
-                ),
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
+                ),
+                per_location_block=PerTokenMixerBlockConfig(
+                    embed_dim=EmbedDim.SMALL.value,
                 ),
                 norm=PreNormConfig(
                     embed_dim=EmbedDim.SMALL.value,
@@ -52,11 +52,11 @@ def _register_configs():
                 embed_dim=EmbedDim.BASE.value,
             ),
             backbone=MixerConfig(
-                per_location_block=PerTokenMixerBlockConfig(
-                    embed_dim=EmbedDim.BASE.value,
-                ),
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
+                ),
+                per_location_block=PerTokenMixerBlockConfig(
+                    embed_dim=EmbedDim.BASE.value,
                 ),
                 norm=PreNormConfig(
                     embed_dim=EmbedDim.BASE.value,
@@ -73,11 +73,11 @@ def _register_configs():
                 embed_dim=EmbedDim.LARGE.value,
             ),
             backbone=MixerConfig(
-                per_location_block=PerTokenMixerBlockConfig(
-                    embed_dim=EmbedDim.LARGE.value,
-                ),
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
+                ),
+                per_location_block=PerTokenMixerBlockConfig(
+                    embed_dim=EmbedDim.LARGE.value,
                 ),
                 norm=PreNormConfig(
                     embed_dim=EmbedDim.LARGE.value,

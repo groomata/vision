@@ -159,6 +159,20 @@ def _register_configs():
             devices="auto",
         ),
     )
+    cs.store(
+        group="trainer",
+        name="cpu-debug",
+        node=TrainerConfig(
+            precision=32,
+            accelerator="cpu",
+            devices=None,
+            logger=WandbLoggerConfig(
+                offline=True,
+                log_model=False,
+            ),
+            fast_dev_run=True,
+        ),
+    )
 
     cs.store(group="trainer/logger", name="wandb", node=WandbLoggerConfig)
 

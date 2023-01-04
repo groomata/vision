@@ -1,43 +1,33 @@
 import torch
-from einops import einsum
+from einops import einsum, pack, unpack
 from einops.layers.torch import EinMix
 
 x = torch.randn(196, 1000)
-inner_dim = 100
+num_heads = 5
+head_dim = 20
 
-query_generator = EinMix(
-    "n d_in -> n d_out",
-    weight_shape="d_in d_out",
-    bias_shape="d_out",
-    d_in=1000,
-    d_out=inner_dim,
-)
+outs = []
+for i in range(num_heads):
+    to_qkv = EinMix(
+        "n d_in -> n d_out",
+        weight_shape="d_in d_out",
+        bias_shape="d_out",
+        d_in=1000,
+        d_out=3 * head_dim,
+    )
 
-key_generator = EinMix(
-    "n d_in -> n d_out",
-    weight_shape="d_in d_out",
-    bias_shape="d_out",
-    d_in=1000,
-    d_out=inner_dim,
-)
+    query, key, value = unpack(
+        to_qkv(x),
+        [[head_dim], [head_dim], [head_dim]],
+        "n *",
+    )
 
-value_generator = EinMix(
-    "n d_in -> n d_out",
-    weight_shape="d_in d_out",
-    bias_shape="d_out",
-    d_in=1000,
-    d_out=inner_dim,
-)
+    dots = einsum(query, key, "q d, k d -> q k") * head_dim**-0.5
 
+    attention = dots.softmax(dim=-1)
 
-query = query_generator(x)
-key = key_generator(x)
-value = value_generator(x)
+    out = einsum(attention, value, "q k, k d -> q d")
 
-dots = einsum(query, key, "q d, k d -> q k") * inner_dim**-0.5
+    outs.append(out)
 
-attention = dots.softmax(dim=-1)
-
-out = einsum(attention, value, "q k, k d -> q d")
-
-print(out.shape)
+outs, packed_shape = pack(outs, "n *")

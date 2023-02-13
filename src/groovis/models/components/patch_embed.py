@@ -1,3 +1,4 @@
+import torch
 from einops.layers.torch import EinMix
 from torch import nn
 
@@ -13,6 +14,7 @@ from groovis.types import (
 class PatchEmbed(nn.Module):
     def __init__(
         self,
+        image_size: StrictInt = 224,
         patch_size: StrictInt = 16,
         channels: StrictInt = 3,
         embed_dim: StrictInt = 1024,
@@ -29,6 +31,10 @@ class PatchEmbed(nn.Module):
             d=embed_dim,
         )
 
+        self.position_embedding = nn.Parameter(
+            torch.randn((image_size // patch_size) ** 2, embed_dim) * 0.02
+        )
+
     @torchtyped
     def forward(self, images: ImageTensor) -> SequenceTensor:
-        return self.patch_embed(images)
+        return self.patch_embed(images) + self.position_embedding

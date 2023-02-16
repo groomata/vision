@@ -41,6 +41,9 @@ class SelfAttention(nn.Module):
             d_out=self.embed_dim,
         )
 
+        # # WARNING: Incorrect!
+        # self.relative_position_bias = nn.Parameter(torch.randn(num_heads, 196, 196))
+
     def forward(self, representation: SequenceTensor) -> SequenceTensor:
         query, key, value = unpack(
             self.to_qkv(representation),
@@ -54,6 +57,9 @@ class SelfAttention(nn.Module):
         )
 
         dots = einsum(query, key, "... q d, ... k d -> ... q k") * self.head_dim**-0.5
+
+        # dots += self.relative_position_bias
+
         attention = dots.softmax(dim=-1)
         out = einsum(attention, value, "... q k, ... k d -> ... q d")
         out = rearrange(out, "... h n d -> ... n (h d)")

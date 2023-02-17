@@ -1,4 +1,5 @@
-from einops import einsum, rearrange, unpack
+import torch
+from einops import einsum, rearrange, unpack, pack
 from einops.layers.torch import EinMix
 from hydra_zen.typing import Partial
 from torch import nn
@@ -16,8 +17,8 @@ from groovis.types import (
 class SelfAttention(nn.Module):
     def __init__(
         self,
-        embed_dim: int = 1024,
-        num_heads: int = 8,
+        embed_dim: StrictInt = 1024,
+        num_heads: StrictInt = 8,
     ) -> None:
         super().__init__()
 
@@ -68,7 +69,7 @@ class SelfAttention(nn.Module):
         return out
 
 
-class PerTokenMixerBlock(nn.Module):
+class Feedforward(nn.Module):
     """
     Block for per-location mixing operations
     """
@@ -102,6 +103,71 @@ class PerTokenMixerBlock(nn.Module):
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:
         return self.block(representation)
+
+
+class FusedTransformerBlock(nn.Module):
+    """
+    Implements [ViT-22B](https://arxiv.org/abs/2302.05442)
+    """
+
+    def __init__(
+        self,
+        embed_dim: StrictInt = 1024,
+        expansion_factor: StrictFloat = 4,
+        num_heads: StrictInt = 8,
+        act_layer: Partial[nn.Module] = nn.GELU,
+    ) -> None:
+        super().__init__()
+
+        self.expanded_dim = int(expansion_factor * embed_dim)
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
+
+        self.proj_in = EinMix(
+            "b n d_in -> b n d_out",
+            weight_shape="d_in d_out",
+            d_in=embed_dim,
+            d_out=self.expanded_dim + 3 * embed_dim,
+        )
+        self.ff_bias = nn.Parameter(torch.zeros(self.expanded_dim))
+
+        self.proj_out = EinMix(
+            "b n d_out -> b n d_in",
+            weight_shape="d_out d_in",
+            bias_shape="d_in",
+            d_in=embed_dim,
+            d_out=self.expanded_dim + embed_dim,
+        )
+
+        self.act_layer = act_layer()
+
+        self.query_norm = nn.LayerNorm(embed_dim)
+        self.key_norm = nn.LayerNorm(embed_dim)
+
+    @torchtyped
+    def forward(self, representation: SequenceTensor) -> SequenceTensor:
+        ff, query, key, value = unpack(
+            self.proj_in(representation),
+            [[self.expanded_dim], [self.embed_dim], [self.embed_dim], [self.embed_dim]],
+            "b n *",
+        )
+
+        ff_out = self.act_layer(ff + self.ff_bias)
+
+        # WARNING: Should be done head-wise!
+        query, key, value = map(
+            lambda x: rearrange(x, "... n (h d) -> ... h n d", h=self.num_heads),
+            (self.query_norm(query), self.key_norm(key), value),
+        )
+        dots = einsum(query, key, "... q d, ... k d -> ... q k") * self.head_dim**-0.5
+        attention = dots.softmax(dim=-1)
+        attention_out = einsum(attention, value, "... q k, ... k d -> ... q d")
+        attention_out = rearrange(attention_out, "... h n d -> ... n (h d)")
+
+        out, _packed_shape = pack([ff_out, attention_out], "b n *")
+        out = self.proj_out(out)
+        return out
 
 
 class CrossTokenMixerBlock(nn.Module):
@@ -154,6 +220,24 @@ class AlternatingBackbone(nn.Module):
         for _ in range(depth):
             self.blocks.append(norm(block=cross_location_block()))
             self.blocks.append(norm(block=per_location_block()))
+
+    @torchtyped
+    def forward(self, representation: SequenceTensor) -> SequenceTensor:
+        for block in self.blocks:
+            representation = block(representation)
+        return representation
+
+
+class HomogeneousBackbone(nn.Module):
+    def __init__(
+        self,
+        block: Partial[nn.Module],
+        norm: Partial[NormType],
+        depth: StrictInt = 24,
+    ) -> None:
+        super().__init__()
+
+        self.blocks = nn.ModuleList([norm(block=block()) for _ in range(depth)])
 
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:

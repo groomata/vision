@@ -4,7 +4,7 @@ from groovis.configs import full_builds, partial_builds
 from groovis.models.vit import (
     AlternatingBackbone,
     CrossTokenMixerBlock,
-    PerTokenMixerBlock,
+    Feedforward,
 )
 
 from . import ArchitectureConfig, Depth, EmbedDim, PatchEmbedConfig
@@ -16,8 +16,8 @@ CrossTokenMixerBlockConfig = partial_builds(
     expansion_factor=0.5,
     act_layer=GELUConfig,
 )
-PerTokenMixerBlockConfig = partial_builds(
-    PerTokenMixerBlock,
+FeedforwardConfig = partial_builds(
+    Feedforward,
     expansion_factor=4,
     act_layer=GELUConfig,
 )
@@ -38,7 +38,7 @@ def _register_configs():
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
                 ),
-                per_location_block=PerTokenMixerBlockConfig(
+                per_location_block=FeedforwardConfig(
                     embed_dim=EmbedDim.SMALL.value,
                 ),
                 norm=PreNormConfig(
@@ -59,7 +59,7 @@ def _register_configs():
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
                 ),
-                per_location_block=PerTokenMixerBlockConfig(
+                per_location_block=FeedforwardConfig(
                     embed_dim=EmbedDim.BASE.value,
                 ),
                 norm=PreNormConfig(
@@ -80,7 +80,7 @@ def _register_configs():
                 cross_location_block=CrossTokenMixerBlockConfig(
                     seq_length=14 * 14,
                 ),
-                per_location_block=PerTokenMixerBlockConfig(
+                per_location_block=FeedforwardConfig(
                     embed_dim=EmbedDim.LARGE.value,
                 ),
                 norm=PreNormConfig(

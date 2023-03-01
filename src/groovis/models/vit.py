@@ -145,6 +145,10 @@ class FusedTransformerBlock(nn.Module):
         self.query_norm = nn.LayerNorm(embed_dim)
         self.key_norm = nn.LayerNorm(embed_dim)
 
+        # Implements Sub-LN in [Foundation Transformers](https://arxiv.org/abs/2210.06423)
+        self.attention_norm = nn.LayerNorm(embed_dim)
+        self.ff_norm = nn.LayerNorm(self.expanded_dim)
+
     @torchtyped
     def forward(self, representation: SequenceTensor) -> SequenceTensor:
         ff, query, key, value = unpack(
@@ -165,7 +169,13 @@ class FusedTransformerBlock(nn.Module):
         attention_out = einsum(attention, value, "... q k, ... k d -> ... q d")
         attention_out = rearrange(attention_out, "... h n d -> ... n (h d)")
 
-        out, _packed_shape = pack([ff_out, attention_out], "b n *")
+        out, _packed_shape = pack(
+            [
+                self.ff_norm(ff_out),
+                self.attention_norm(attention_out),
+            ],
+            "b n *",
+        )
         out = self.proj_out(out)
         return out
 

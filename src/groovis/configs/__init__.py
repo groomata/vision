@@ -26,7 +26,7 @@ full_builds = make_custom_builds_fn(
 
 defaults = [
     "_self_",
-    {"architecture": "mixer_base"},
+    {"architecture": "vit_small"},
     {"loss": "nt_xent_medium"},
     {"datamodule": "imagenet"},
     {"datamodule/dataset": "imagenette"},
